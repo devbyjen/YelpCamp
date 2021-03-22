@@ -25,9 +25,9 @@ const seedDB = async() => {
     }
 }
 
-seedDB().then() => {
+seedDB().then( () => {
     mongoose.connection.close();
-};
+});
 
 function getRandomElement(arr) {
     const randomNum = Math.floor(Math.random() * arr.length);
