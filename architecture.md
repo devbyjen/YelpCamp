@@ -1,7 +1,7 @@
 YelpCamp
 --a website to find and rank campgrounds.
 
-Node Modules: express, mongoose, ejs
+Node Modules: express, mongoose, ejs, method-override
 
 Steps from video:
 406: set up basics
