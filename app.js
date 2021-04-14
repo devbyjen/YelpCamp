@@ -2,8 +2,23 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
-const Campground = require('./models/campground');
 const methodOverride = require('method-override');
+const morgan = require('morgan');
+const ejsMate = require('ejs-mate');
+// const wrapAsync = require('./utilities/wrapAsync');
+const ExpressError = require('./utilities/ExpressError');
+const dataSchemas = require('./dataSchemas'); 
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
+const passportLocal = require('passport-local');
+const User = require('./models/user');
+
+
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
+
 // const { request } = require('node:http');
 
 //later will have logic to set db
@@ -19,6 +34,30 @@ db.once("open", () => {
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method')); 
+app.use(morgan('tiny')); //middleware to log requests, then continue
+app.engine('ejs', ejsMate);
+app.use(express.static(path.join(__dirname, 'public')));//serve the public directory
+
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true
+    }
+};
+app.use(session(sessionConfig));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session()); // must use session() before doing this
+passport.use(new passportLocal(User.authenticate())); //hello, passport. please use the local strategy, and the authentication mode is located on the user model (static method added automatically by passport-local-mongoose) 
+passport.serializeUser(User.serializeUser()); //how we store a user in the session
+passport.deserializeUser(User.deserializeUser()); //how to unstore a user in the session
+
+
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -27,50 +66,38 @@ app.listen(3000, () => {
     console.log("Serving on port 3000");
 });
 
+
+//middleware to show all flash messages
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({email: 'devbyjen@gmail.com', username: 'devbyjen'});
+    const registeredUser = await User.register(user, 'thisismypassword');
+    res.send(registeredUser);
+})
+
+
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
+app.use('/', userRoutes);
+
 app.get('/', (req, res) => {
     res.render("home");
 })
 
-//CRUD
-
-// CREATE: Form
-app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new');
-});
-
-//CREATE: Insert data
-app.post('/campgrounds', async (req, res) => {
-    const camp = new Campground (req.body.campground);
-    await camp.save();
-    res.redirect(`/campgrounds/${camp._id}`);
-});
-
-// READ: Show all campgrounds
-app.get('/campgrounds', async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', {campgrounds});
-});
-
-// READ: Show details for a single campground
-app.get('/campgrounds/:id', async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    res.render('campgrounds/show', {campground});
-});
-
-// UPDATE: show form to update a single campground
-app.get('/campgrounds/:id/edit', async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    res.render('campgrounds/edit', {campground});
-});
-
-// UPDATE: submitted form, put data in DB.
-app.put('/campgrounds/:id', async (req, res) => {
-    await Campground.findByIdAndUpdate(req.params.id, {...req.body.campground}, {useFindAndModify: false});
-    res.redirect(`/campgrounds/${req.params.id}`);
-});
-
-// DELETE: a single campground
-app.delete('/campgrounds/:id', async (req, res) => {
-    await Campground.findByIdAndDelete(req.params.id, {useFindAndModify: false});
-    res.redirect('/campgrounds');
+//catch any page requests not already listed
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404));
 })
+
+//basic error handler
+app.use((err, req, res, next) => {
+    if(!err.message) err.message = "Something Went Wrong";
+    if(!err.statusCode) err.statusCode = 500;
+    res.status(err.statusCode).render('error', {err});
+});
+

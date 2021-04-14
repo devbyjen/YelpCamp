@@ -1,7 +1,19 @@
 YelpCamp
 --a website to find and rank campgrounds.
 
-Node Modules: express, mongoose, ejs, method-override
+Node Modules:
+
+- express: the server
+- mongoose: connect to db
+- ejs: templating
+- method-override: send request types other than get/post from forms
+- joi: form validation
+- express-session: sessions
+- connect-flash: flash messages
+- bcrypt: hash passwords (not used bc passport?)
+- passport: handle login/auth
+- passport-local: login with username/password
+- passport-local-mongoose: add passport stuff to mongoose schemas
 
 Steps from video:
 406: set up basics
@@ -13,3 +25,13 @@ Steps from video:
 407: seeding campgrounds
 
 - a bunch of fake data to work with. Random city, random descriptor, random place name. Create seeds file that deletes all in db, and replaces with 50 randomly generated campgrounds.
+
+Steps to data validation:
+
+- bootstrap data validation before form submits
+- joi data validation after submit but before db
+- mongodb data requirements
+
+Authentication:
+
+-uses Passport for login details
