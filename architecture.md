@@ -35,3 +35,7 @@ Steps to data validation:
 Authentication:
 
 -uses Passport for login details
+
+BUG LIST:
+-layouts/boilerplate.ejs: bootstrap flash messages not dismissible
+-partials/navbar.ejs: bootstrap won't move stuff to the right side

@@ -2,6 +2,10 @@
 
 <h1>Home</h1>
 <!-- test if logged in first before showing this form-->
+<% if(currentUser) { %>
 <form action="/logout" method="POST">
-    <button type="submit">Log Out</button>
+    <button type="submit" class="btn btn-success">Log Out</button>
 </form>
+<% } else { %>
+    <a class="btn btn-success" href="/login">Log In</a>
+<% } %>

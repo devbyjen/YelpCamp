@@ -20,6 +20,7 @@
 <body class="d-flex flex-column vh-100">
     <%- include('../partials/navbar'); %>
     <main class="container mt-5">
+        <!-- BUG: bootstrap code, directly copied, is not working correctly. X shows up weird, and it's not dismissable. Is this bc I used "min"?-->
         <% if(success && success.length) { %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Success!</strong> <%= success %>

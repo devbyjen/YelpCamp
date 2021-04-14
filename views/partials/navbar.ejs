@@ -13,9 +13,14 @@
         </div>
         <!-- BUG: class ml-auto was supposed to push these to the right end. What's not working? (from video 511)-->
         <div class="navbar-nav ml-auto">
-          <a class="nav-link" href="/login">Log In</a>
-          <a class="nav-link" href="/register">Sign Up</a>
-          <a class="nav-link" href="/logout">Log Out</a>
+          <% if(!currentUser) { %>
+            <a class="nav-link" href="/login">Log In</a>
+            <a class="nav-link" href="/register">Sign Up</a>
+          <% } else { %>
+            <form method="POST" action="/logout">
+              <button class="btn btn-success nav-link">Log Out</button>
+            </form>
+          <% } %>
       </div>
     </div>
   </nav>
