@@ -23,7 +23,8 @@ const seedDB = async() => {
             location: `${randomCity.city}, ${randomCity.state}`,
             image: "https://source.unsplash.com/collection/155011",
             description: "A campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blah",
-            price
+            price,
+            author: "6076048071276d098844cefa"
         });
         await c.save();
     }

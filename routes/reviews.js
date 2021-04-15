@@ -6,15 +6,16 @@ const Campground = require('../models/campground');
 const Review = require('../models/review');
 // const dataSchemas = require('../dataSchemas');
 // const ExpressError = require('../utilities/ExpressError');
-const {validateReview} = require('../utilities/middleware');
+const {validateReview, isLoggedIn, isAuthor, isReviewAuthor} = require('../utilities/middleware');
 
 
 //CRUD
 
 //CREATE: Insert new review
-router.post('/', validateReview, wrapAsync(async(req, res, next) => {
+router.post('/', isLoggedIn, validateReview, wrapAsync(async(req, res, next) => {
     const {id} = req.params;
     const review = new Review (req.body.review);
+    review.author = req.user._id;
     const campground = await Campground.findById(id);
     if(!campground) {
         req.flash('error', 'Campground unavailable');
@@ -28,7 +29,7 @@ router.post('/', validateReview, wrapAsync(async(req, res, next) => {
 }));
 
 //DELETE: a single review
-router.delete('/:rid', wrapAsync(async(req, res) => {
+router.delete('/:rid', isLoggedIn, isReviewAuthor, wrapAsync(async(req, res) => {
     const campground = await Campground.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.rid}});
     if(!campground) {
         req.flash('error', 'Campground unavailable');
