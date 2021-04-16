@@ -36,6 +36,15 @@ Authentication:
 
 -uses Passport for login details
 
+Routes/controller uses MVC (Model View Controller)
+-data-headvy in /models
+-everything user sees in /views
+-heart of the application in /controllers
+
+Style:
+-stars from starability.css
+-bootstrap
+
 BUG LIST:
 -layouts/boilerplate.ejs: bootstrap flash messages not dismissible
 -partials/navbar.ejs: bootstrap won't move stuff to the right side

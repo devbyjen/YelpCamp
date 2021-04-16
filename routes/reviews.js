@@ -7,42 +7,15 @@ const Review = require('../models/review');
 // const dataSchemas = require('../dataSchemas');
 // const ExpressError = require('../utilities/ExpressError');
 const {validateReview, isLoggedIn, isAuthor, isReviewAuthor} = require('../utilities/middleware');
+const reviews = require('../controllers/reviews');
 
 
-//CRUD
+router.post('/', isLoggedIn, validateReview, 
+    reviews.insert);
 
-//CREATE: Insert new review
-router.post('/', isLoggedIn, validateReview, wrapAsync(async(req, res, next) => {
-    const {id} = req.params;
-    const review = new Review (req.body.review);
-    review.author = req.user._id;
-    const campground = await Campground.findById(id);
-    if(!campground) {
-        req.flash('error', 'Campground unavailable');
-        return res.redirect('/campgrounds');
-    }
-    await review.save();
-    campground.reviews.push(review);
-    await campground.save();
-    req.flash('success', 'Review created.');
-    res.redirect(`/campgrounds/${id}`);
-}));
 
-//DELETE: a single review
-router.delete('/:rid', isLoggedIn, isReviewAuthor, wrapAsync(async(req, res) => {
-    const campground = await Campground.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.rid}});
-    if(!campground) {
-        req.flash('error', 'Campground unavailable');
-        return res.redirect('/campgrounds');
-    }
-    const review = await Review.findByIdAndDelete(req.params.rid, {useFindAndModify: false});
-    if(!review) {
-        req.flash('error', 'Review unavailable');
-        return res.redirect(`/campgrounds/${req.params.id}`);
-    }
-    req.flash('success', 'Review deleted.');
-    res.redirect(`/campgrounds/${req.params.id}`);
-}))
+router.delete('/:rid', isLoggedIn, isReviewAuthor, 
+    reviews.delete);
 
 
 module.exports = router;
