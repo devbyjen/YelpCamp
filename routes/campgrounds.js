@@ -6,6 +6,9 @@ const Campground = require('../models/campground');
 const flash = require('connect-flash');
 const {validateCampground, isLoggedIn, isAuthor} = require('../utilities/middleware');
 const campgrounds = require('../controllers/campgrounds');
+const multer = require('multer');
+const {storage} = require('../cloudinary');
+const upload = multer({storage});
 
 
 
@@ -15,11 +18,16 @@ router.get('/new', isLoggedIn,
 
 router.route('/')
     .get(campgrounds.index)
-    .post(isLoggedIn, validateCampground, campgrounds.create);
+    .post(isLoggedIn, upload.array('image', 3), validateCampground, campgrounds.create);
+    // .post(upload.array('image'), (req, res) => {
+
+    //     console.log(req.body, req.files);
+    //     res.send('it worked?');
+    // })
 
 router.route('/:id')
     .get(campgrounds.show)
-    .put(isLoggedIn, isAuthor, validateCampground, campgrounds.update)
+    .put(isLoggedIn, isAuthor, upload.array('image', 3), validateCampground, campgrounds.update)
     .delete(isLoggedIn, isAuthor, campgrounds.delete);
 
 router.get('/:id/edit', isLoggedIn, isAuthor,

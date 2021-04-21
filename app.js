@@ -1,3 +1,10 @@
+//development mode vs production mode
+//development mode the environment variables are listed in a file.
+//production mode they're not.
+if(process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+    // console.log(process.env.SECRET); //how you access the env variables
+}
 const express = require('express');
 const app = express();
 const path = require('path');

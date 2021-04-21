@@ -4,7 +4,7 @@
     <div class="row">
         <h1 class="text-center">Update Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" class="validated-form" novalidate>
+            <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" class="form-control" name="campground[title]" id="title" placeholder="title" value="<%=campground.title%>" required>
@@ -18,8 +18,8 @@
                     <div class="invalid-feedback">This field is required</div>
                 </div>
                 <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input type="text" class="form-control" name="campground[image]" id="image" placeholder="url" value="<%=campground.image%>" required>
+                    <label for="image" class="form-label">Image</label>  
+                    <input type="file" name="image" multiple>
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
@@ -39,6 +39,15 @@
                     </div> -->
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">This field is required</div>
+                </div>
+                <div class="mb-3">
+                    <% for(let i=0; i<campground.images.length; i++) { %>
+                        <img src="<%=campground.images[i].thumbnail%>" class="img-thumbnail" alt="">
+                        <div class="form-check-inline mb-3">
+                            <input type="checkbox" name="deleteImages[]" value="<%=campground.images[i].filename%>" id="img<%=i%>">
+                            <label for="img<%=i%>">Delete?</label>
+                        </div>
+                    <% } %>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-success">Submit</button>

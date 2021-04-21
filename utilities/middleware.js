@@ -1,10 +1,12 @@
 const dataSchemas = require('../dataSchemas');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
+const ExpressError = require('./ExpressError');
 
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
+        console.log(`returnTo: ${req.session.returnTo}`)
         req.flash('error', 'You must be signed in');
         return res.redirect('/login');
     }

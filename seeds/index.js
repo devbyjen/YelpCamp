@@ -21,10 +21,14 @@ const seedDB = async() => {
         const c = new Campground({
             title: `${getRandomElement(descriptors)} ${getRandomElement(places)}`,
             location: `${randomCity.city}, ${randomCity.state}`,
-            image: "https://source.unsplash.com/collection/155011",
+            images: {
+                url: "https://source.unsplash.com/collection/155011",
+                filename: "filename"
+            },
             description: "A campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blah",
             price,
-            author: "6076048071276d098844cefa"
+            author: "6076048071276d098844cefa",
+            averageRating: 0
         });
         await c.save();
     }
