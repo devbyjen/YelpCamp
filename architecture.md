@@ -14,6 +14,12 @@ Node Modules:
 - passport: handle login/auth
 - passport-local: login with username/password
 - passport-local-mongoose: add passport stuff to mongoose schemas
+- multer (handling forms with enctype=multipart/form-data, aka file uploads)
+  -dotenv loads environment variables from a .env file (store that config separate from your code!)
+  -cloudinary (image file hosting)
+  -multer-storage-cloudinary (connect upload with image file hosting)
+  -sharp (image resizing)
+  -@mapbox/mapbox-sdk (geocoding and location mapping)
 
 Steps from video:
 406: set up basics
@@ -45,6 +51,9 @@ Style:
 -stars from starability.css
 -bootstrap
 
+External tools:
+-cloudinary for image hosting
+-mapbox for geocoding/location mapping
+
 BUG LIST:
--layouts/boilerplate.ejs: bootstrap flash messages not dismissible
--partials/navbar.ejs: bootstrap won't move stuff to the right side
+-show page: image carousel either broken or RIDICULOUSLY slow. (EDIT: I think the indicators are not working. Yet another fun bootstrap bug!)
