@@ -5,7 +5,7 @@ const {places, descriptors} = require('./seedHelpers');
 const mbGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mbToken = 'pk.eyJ1IjoiZGV2YnlqZW4iLCJhIjoiY2tucXV5dzlvMDJjdzJvbWtobXM3c2I5NCJ9.SVLWu1WXklmR0SA78xptXA';//process.env.MAPBOX_TOKEN;
 const geocoder = mbGeocoding({accessToken: mbToken});
-const csvFilePath = ('C:/Users/Mom and Dad/Desktop/Jennie/code/bootcamp/YelpCamp/seeds/data/allcampgrounds.csv');
+const csvFilePath = ('../data/allcampgrounds.csv');
 const csv=require('csvtojson');
 const {typeLookup, getDescriptionString, getJSONArray} = require('./data/cgDataHelpers');
 
