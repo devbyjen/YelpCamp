@@ -7,7 +7,7 @@ const mbToken = 'pk.eyJ1IjoiZGV2YnlqZW4iLCJhIjoiY2tucXV5dzlvMDJjdzJvbWtobXM3c2I5
 const geocoder = mbGeocoding({accessToken: mbToken});
 const csvFilePath = ('../data/allcampgrounds.csv');
 const csv=require('csvtojson');
-const {typeLookup, getDescriptionString, getJSONArray} = require('../data/cgDataHelpers');
+const {typeLookup, getDescriptionString, getJSONArray} = require('./cgDataHelpers');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
