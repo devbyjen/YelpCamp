@@ -1,3 +1,4 @@
+const User = require('../models/user');
 const wrapAsync = require('../utilities/wrapAsync');
 
 //CRUD
@@ -10,11 +11,16 @@ module.exports.renderRegisterForm = (req, res) => {
 //CREATE: new user
 module.exports.create = wrapAsync(async(req, res, next) => {
     try {
-        const {username, email, password} = req.body;  
+        const {username, email, password} = req.body;
+        console.log(`username: ${username}`);
+        console.log(`email: ${email}`);
         const newUser = new User({email, username});
+        console.log("here");
         const registeredUser = await User.register(newUser, password); //this hashes and stores the password
         req.login(registeredUser, err => {
-            if(err) return next(err);
+            if(err){
+                return next(err);
+            } 
             req.flash('success', `Welcome, ${username}! Your account has been created.`);
             res.redirect('/');
         }); //req.login is automatically called by passport.authenticate, but required here

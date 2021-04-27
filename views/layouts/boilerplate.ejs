@@ -16,17 +16,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"	
         integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">	
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+    
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css' rel='stylesheet' />
+
+    <link rel="stylesheet" href="/style/boilerplate.css">
+
     
     <title>YelpCamp</title>
 </head>
-<body class="d-flex flex-column vh-100">
+<body>
     <%- include('../partials/navbar'); %>
-    <main class="container mt-5">
-        <!-- BUG: bootstrap code, directly copied, is not working correctly. X shows up weird, and it's not dismissable. Is this bc I used "min"?-->
+    <main >
         <% if(success && success.length) { %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Success!</strong> <%= success %>
-                <span type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </span>
             </div>
@@ -34,7 +40,7 @@
         <% if(error && error.length) { %>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Error!</strong> <%= error %>
-                <span type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </span>
             </div>

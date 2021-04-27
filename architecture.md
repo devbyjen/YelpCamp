@@ -20,9 +20,14 @@ Node Modules:
   -multer-storage-cloudinary (connect upload with image file hosting)
   -sharp (image resizing)
   -@mapbox/mapbox-sdk (geocoding and location mapping)
+  -csvtojson (for importing real campgrounds data)
+  -google-images (search for and download one image per campground)
+  -express-mongo-sanitize (sanitize inputs to project db from injection attacks)
+  -sanitize-html (sanitize inputs to help prevent xss attacks)
+  -helmet (more attack prevention, specifically headers)
 
-Steps from video:
-406: set up basics
+  Steps from video:
+  406: set up basics
 
 - express, (start & test server is running)
 - ejs (set view engine, make view directory, create a route and use one easy view as a test.)

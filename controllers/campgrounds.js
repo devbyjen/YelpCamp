@@ -2,6 +2,9 @@
 const { cloudinary } = require('../cloudinary');
 const Campground = require('../models/campground');
 const wrapAsync = require('../utilities/wrapAsync');
+const mbGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mbToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbGeocoding({accessToken: mbToken});
 
 //CRUD
 
@@ -12,11 +15,15 @@ module.exports.createForm = (req, res) => {
 
 //CREATE: Insert new campground
 module.exports.create = wrapAsync(async (req, res, next) => {
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1
+    }).send();
     const camp = new Campground (req.body.campground);
+    camp.geometry = geoData.body.features[0].geometry;
     camp.images = req.files.map(f => ({ url: f.path, filename: f.filename}));
     camp.author = req.user._id;
     await camp.save();
-    console.log(camp);
     req.flash('success', 'Campground created.');
     res.redirect(`/campgrounds/${camp._id}`);
 });
@@ -35,7 +42,6 @@ module.exports.show = wrapAsync(async (req, res) => {
         populate: { 
             path: 'author'
         }}).populate('author'));
-    console.log(campground);
     if(!campground) {
         console.log('in here');
         req.flash('error', 'Campground unavailable');
@@ -60,10 +66,13 @@ module.exports.update = wrapAsync(async (req, res) => {
     let campground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {useFindAndModify: false});
     const images = req.files.map(f => ({ url: f.path, filename: f.filename}));
     campground.images.push(...images);
-    console.log("delete images:" + req.body.deleteImages);
     if(req.body.deleteImages){
         for(let filename of req.body.deleteImages){
-            await cloudinary.uploader.destroy(filename);
+            if(filename !== "donotdelete") {
+                await cloudinary.uploader.destroy(filename);
+            } else {
+                await campground.images.updateOne({$pull: {images: {filename: 'donotdelete'}}});
+            }
         }
         await campground.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
         console.log("campground:" + campground);

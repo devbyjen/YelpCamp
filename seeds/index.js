@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const Campground = require('../models/campground');
 const cities = require('./cities');
 const {places, descriptors} = require('./seedHelpers');
+const mbGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mbToken = 'pk.eyJ1IjoiZGV2YnlqZW4iLCJhIjoiY2tucXV5dzlvMDJjdzJvbWtobXM3c2I5NCJ9.SVLWu1WXklmR0SA78xptXA';//process.env.MAPBOX_TOKEN;
+const geocoder = mbGeocoding({accessToken: mbToken});
+const csvFilePath = ('C:/Users/Mom and Dad/Desktop/Jennie/code/bootcamp/YelpCamp/seeds/data/allcampgrounds.csv');
+const csv=require('csvtojson');
+const {typeLookup, getDescriptionString, getJSONArray} = require('./data/cgDataHelpers');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
@@ -13,21 +19,33 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
+
+
+//get data from csv file
+
 const seedDB = async() => {
+    
+    const jsonArray = await getJSONArray(csvFilePath, csv);
     await Campground.deleteMany({}); //delete all first
-    for(let i=0; i<50; i++){
-        const randomCity = getRandomElement(cities);
-        const price = Math.floor(Math.random()*20)+10;
+    for(let i=0; i<jsonArray.length; i++){
+        let data = jsonArray[i];
+        // const randomCity = getRandomElement(cities);
+        // const price = Math.floor(Math.random()*20)+10;
+        let description = getDescriptionString(data);
+        
         const c = new Campground({
-            title: `${getRandomElement(descriptors)} ${getRandomElement(places)}`,
-            location: `${randomCity.city}, ${randomCity.state}`,
-            images: {
-                url: "https://source.unsplash.com/collection/155011",
-                filename: "filename"
+            title: data.name,
+            location: `${data.city}, ${data.state}`,
+            geometry: {
+                type: 'Point',
+                coordinates: [data.longitude, data.latitude]
             },
-            description: "A campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blahA campy campground blah blah blah",
-            price,
-            author: "6076048071276d098844cefa",
+            images: {
+                url: 'https://res.cloudinary.com/devbyjen/image/upload/v1619454480/YelpCamp/trees-silhouette.jpg',
+                filename: "donotdelete",
+            },
+            description: description,
+            author: "6076048071276d098844cefa", //My author id
             averageRating: 0
         });
         await c.save();

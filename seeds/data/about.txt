@@ -1,0 +1,16 @@
+Data from http://www.uscampgrounds.info/takeit.html
+The fields in the below .csv files are in this order: 
+lon, 
+lat, 
+gps composite field (ie: all the following data fields compacted into one field for a single-field GPS or mapping software display), 
+4 letter campground code (corresponds to map), 
+campground name, 
+type, 
+phone, 
+dates open, 
+comments (COMM), 
+number of campsites, 
+elevation (feet), 
+amenities (AMEN), 
+state, 
+distance and bearing from nearest town. 

@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+}
+
+.navbar,
+.footer {
+  background-color: #343a40;
+  width: 100%;
+}
+
+.container {
+  margin-top: 20px 0 0 0;
+}
+
+.card {
+  margin-bottom: 12px;
+}
+
+#map {
+  width: 99vw;
+  height: 70vh;
+}
+
+#map.small-map {
+  height: 200px;
+}
+
+.btn-success {
+  margin-bottom: 12px;
+}
+
+.input-group {
+  margin-bottom: 12px;
+}
+
+#delete-images,
+.delete-image {
+  margin-bottom: 12px;
+}
+
+#reviews .card {
+  max-width: 500px;
+}
+
+#form {
+  margin: 10px;
+  border: 1px solid rgb(32, 32, 32);
+  box-shadow: 0 0 5px#00000022;
+  max-width: 400px;
+}
+
+#form form {
+  padding: 10px;
+}
+
+#form h1 {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 30px 0;
+  background-image: linear-gradient(#ffffff88, #ffffff88),
+    url("/img/trees-silhouette.jpg");
+  background-size: contain;
+  text-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.5);
+}
+
+#form label {
+  width: 100%;
+  padding: 0 10px;
+}
+
+#form button {
+  margin: auto;
+}
+
+#form .custom-file {
+  margin: 20px 0px;
+}
+
+#imageCarousel {
+  width: 100vw;
+}
+
+@media (min-width: 1000px) {
+  #about {
+    display: flex;
+    flex-direction: row;
+  }
+  #about #imageCarousel .carousel-inner {
+    width: 50vw;
+  }
+
+  #form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+}
