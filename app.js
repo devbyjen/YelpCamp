@@ -147,6 +147,7 @@ app.listen(port, () => {
 
 //middleware to show all flash messages
 app.use((req, res, next) => {
+    console.log("********************** Current User: " + req.user);
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
