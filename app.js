@@ -27,11 +27,16 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoStore = require('connect-mongo');
+const dbUrl = process.env.DB_URL || process.env.TEST_DB_URL;
+const secret = process.env.SECRET || "thisshouldbeabettersecret";
+
+
 
 // const { request } = require('node:http');
 
 //later will have logic to set db
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 });
 
@@ -49,18 +54,7 @@ app.use(express.static(path.join(__dirname, 'public')));//serve the public direc
 app.use(mongoSanitize());
 app.use(helmet());
 
-const sessionConfig = {
-    name: 'session', //not the default name
-    secret: 'aj23@KJBH#$9jhb124JHB&*^111',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-        // secure: true, //only use this flag on deploy, not on localhost
-        httpOnly: true
-    }
-};
+
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
@@ -106,6 +100,30 @@ app.use(
     })
 );
 
+// const store = new MongoDBStore({
+//     url: process.env.TEST_DB_URL,
+//     secret: process.env.MONGO_SECRET,
+//     touchAfter: 24 * 60 * 60 //1 day in milliseconds
+// });
+
+
+const sessionConfig = {
+    store: MongoStore.create({
+        mongoUrl: dbUrl,
+        secret,
+        touchAfter: 24 * 60 * 60 //1 day in milliseconds),
+    }),
+    name: 'session', //not the default name
+    secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        // secure: true, //only use this flag on deploy, not on localhost
+        httpOnly: true
+    }
+};
 
 app.use(session(sessionConfig));
 app.use(flash());
