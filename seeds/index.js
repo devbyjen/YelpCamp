@@ -5,7 +5,8 @@ const {places, descriptors} = require('./seedHelpers');
 const mbGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mbToken = 'pk.eyJ1IjoiZGV2YnlqZW4iLCJhIjoiY2tucXV5dzlvMDJjdzJvbWtobXM3c2I5NCJ9.SVLWu1WXklmR0SA78xptXA';//process.env.MAPBOX_TOKEN;
 const geocoder = mbGeocoding({accessToken: mbToken});
-const csvFilePath = ('../data/allcampgrounds.csv');
+const csvFilePath = 'C:\\Users\\Mom and Dad\\Desktop\\Jennie\\code\\bootcamp\\YelpCamp\\public\\data\\allcampgrounds.csv';//'http://www.uscampgrounds.info/POI/WestCamp.csv'];//, 'http://www.uscampgrounds.info/POI/SouthwestCamp.csv', 'http://www.uscampgrounds.info/POI/MidwestCamp.csv', 'http://www.uscampgrounds.info/POI/NortheastCamp.csv', 'http://www.uscampgrounds.info/POI/SouthCamp.csv', 'http://www.uscampgrounds.info/POI/CanadaCamp.csv'];
+
 const csv=require('csvtojson');
 const {typeLookup, getDescriptionString, getJSONArray} = require('./cgDataHelpers');
 
@@ -25,31 +26,34 @@ db.once("open", () => {
 
 const seedDB = async() => {
     
-    const jsonArray = await getJSONArray(csvFilePath, csv);
     await Campground.deleteMany({}); //delete all first
-    for(let i=0; i<jsonArray.length; i++){
-        let data = jsonArray[i];
-        // const randomCity = getRandomElement(cities);
-        // const price = Math.floor(Math.random()*20)+10;
-        let description = getDescriptionString(data);
-        
-        const c = new Campground({
-            title: data.name,
-            location: `${data.city}, ${data.state}`,
-            geometry: {
-                type: 'Point',
-                coordinates: [data.longitude, data.latitude]
-            },
-            images: {
-                url: 'https://res.cloudinary.com/devbyjen/image/upload/v1619454480/YelpCamp/trees-silhouette.jpg',
-                filename: "donotdelete",
-            },
-            description: description,
-            author: "6076048071276d098844cefa", //My author id
-            averageRating: 0
-        });
-        await c.save();
-    }
+    // for(let csvFilePath of csvFilePaths)
+    // {
+        const jsonArray = await getJSONArray(csvFilePath, csv);
+        for(let i=0; i<jsonArray.length; i++){
+            let data = jsonArray[i];
+            // const randomCity = getRandomElement(cities);
+            // const price = Math.floor(Math.random()*20)+10;
+            let description = getDescriptionString(data);
+            
+            const c = new Campground({
+                title: data.name,
+                location: `${data.city}, ${data.state}`,
+                geometry: {
+                    type: 'Point',
+                    coordinates: [data.longitude, data.latitude]
+                },
+                images: {
+                    url: 'https://res.cloudinary.com/devbyjen/image/upload/v1619454480/YelpCamp/trees-silhouette.jpg',
+                    filename: "donotdelete",
+                },
+                description: description,
+                author: "6076048071276d098844cefa", //My author id
+                averageRating: 0
+            });
+            await c.save();
+        }
+    // }
 }
 
 seedDB().then( () => {
